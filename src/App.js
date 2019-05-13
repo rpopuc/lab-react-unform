@@ -1,25 +1,36 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as Yup from 'yup';
+import { Form, Scope, Input } from '@rocketseat/unform';
+
+const initialData = {
+  name: 'Diego',
+  address: {
+    street: 'Rua Guilherme Gemballa',
+    number: '260',
+  }
+}
+
+const schema = Yup.object().shape({
+  name: Yup.string().required('Campo obrigatório'),
+  address: Yup.object().shape({
+    number: Yup.string().min(3, 'Número precisa ter 3 dígitos').required('Campo obrigatório')
+  })
+})
 
 function App() {
+  function handleSubmit(data) {
+    console.log(data);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Form schema={schema} onSubmit={handleSubmit} initialData={initialData}>
+      <Input name="name" label="Nome: " /><br/>
+      <Scope path="address">
+        <Input name="street" label="Rua: " /><br/>
+        <Input name="number" label="Número: " /><br/>
+      </Scope>
+
+      <button type="submit">Enviar</button>
+    </Form>
   );
 }
 
